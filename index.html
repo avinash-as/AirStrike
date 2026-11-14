@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Air Strike</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <canvas id="gameCanvas"></canvas>
+
+  <div id="loadingScreen" class="screen">
+    <div class="panel">
+      <h1 class="logo">AIR STRIKE</h1>
+      <p class="subtitle">SKY COMBAT</p>
+      <div class="loading-bar"><div id="loadingFill" class="loading-fill"></div></div>
+      <p id="loadingText">Loading...</p>
+    </div>
+  </div>
+
+  <div id="menuScreen" class="screen hidden">
+    <div class="menu-card">
+      <h1 class="logo">AIR STRIKE</h1>
+      <p class="subtitle">SKY COMBAT</p>
+      <div class="menu-high">HIGH SCORE: <span id="menuHighScore">0</span> &nbsp; COINS: <span id="menuCoins">0</span></div>
+      <div class="menu-btns">
+        <button id="playBtn" class="btn primary">PLAY</button>
+        <button id="aircraftBtn" class="btn">AIRCRAFT</button>
+        <button id="missionsBtn" class="btn">MISSIONS</button>
+        <button id="hangarBtn" class="btn">HANGAR</button>
+        <button id="settingsBtn" class="btn">SETTINGS</button>
+        <button id="scoresBtn" class="btn">HIGH SCORES</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="aircraftScreen" class="screen hidden">
+    <div class="panel wide">
+      <h2>AIRCRAFT SELECTION</h2>
+      <div id="aircraftList" class="aircraft-list"></div>
+      <div class="menu-btns">
+        <button id="aircraftBack" class="btn primary">BACK</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="difficultyScreen" class="screen hidden">
+    <div class="panel">
+      <h2>SELECT DIFFICULTY</h2>
+      <div class="menu-btns">
+        <button class="btn diffBtn" data-diff="easy">EASY</button>
+        <button class="btn diffBtn" data-diff="normal">NORMAL</button>
+        <button class="btn diffBtn" data-diff="hard">HARD</button>
+        <button id="diffBack" class="btn">BACK</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="missionsScreen" class="screen hidden">
+    <div class="panel wide">
+      <h2>MISSIONS</h2>
+      <div id="missionsList" class="missions-list"></div>
+      <div class="menu-btns"><button id="missionsBack" class="btn primary">BACK</button></div>
+    </div>
+  </div>
+
+  <div id="hangarScreen" class="screen hidden">
+    <div class="panel wide">
+      <h2>UPGRADE HANGAR</h2>
+      <div id="hangarInfo"></div>
+      <div class="menu-btns"><button id="hangarBack" class="btn primary">BACK</button></div>
+    </div>
+  </div>
+
+  <div id="settingsScreen" class="screen hidden">
+    <div class="panel">
+      <h2>SETTINGS</h2>
+      <div class="setting-row"><span>Sound</span><button id="soundToggle" class="btn small">ON</button></div>
+      <div class="setting-row"><span>Music Volume</span><input type="range" id="musicVol" min="0" max="1" step="0.05" value="0.35"></div>
+      <div class="setting-row"><span>SFX Volume</span><input type="range" id="sfxVol" min="0" max="1" step="0.05" value="0.7"></div>
+      <div class="setting-row"><span>Graphics</span><select id="qualitySel"><option value="low">Low</option><option value="medium">Medium</option><option value="high" selected>High</option></select></div>
+      <div class="setting-row"><span>Sensitivity</span><input type="range" id="sensVol" min="0.5" max="2" step="0.1" value="1.0"></div>
+      <div class="setting-row"><span>Reset Progress</span><button id="resetBtn" class="btn small">RESET</button></div>
+      <div class="menu-btns"><button id="settingsBack" class="btn primary">BACK</button></div>
+    </div>
+  </div>
+
+  <div id="scoresScreen" class="screen hidden">
+    <div class="panel">
+      <h2>HIGH SCORES</h2>
+      <p>Best: <span id="bestScore">0</span></p>
+      <p>Total Coins: <span id="totalCoins">0</span></p>
+      <p>Levels Completed: <span id="levelsDone">0</span></p>
+      <div class="menu-btns"><button id="scoresBack" class="btn primary">BACK</button></div>
+    </div>
+  </div>
+
+  <div id="hud" class="hidden">
+    <div class="hud-top">
+      <div class="hud-block"><span class="hud-label">SCORE</span><span id="scoreVal" class="hud-val">0</span></div>
+      <div class="hud-block"><span class="hud-label">LIVES</span><span id="livesVal" class="hud-val">3</span></div>
+      <div class="hud-block"><span class="hud-label">LEVEL</span><span id="levelVal" class="hud-val">1</span></div>
+      <div class="hud-block"><span class="hud-label">COINS</span><span id="coinsVal" class="hud-val">0</span></div>
+      <button id="pauseBtn" class="icon-btn">II</button>
+    </div>
+    <div class="hud-bottom">
+      <div class="health-wrap"><span class="hud-label">HEALTH</span><div class="health-bar"><div id="healthBar" class="health-fill"></div></div><span id="healthVal" class="hud-val small">100</span></div>
+      <div id="bossBarWrap" class="hidden boss-wrap"><span class="hud-label">BOSS</span><div class="health-bar boss"><div id="bossBar" class="health-fill boss"></div></div></div>
+      <div id="weaponBar" class="weapon-bar"></div>
+    </div>
+  </div>
+
+  <div id="pauseOverlay" class="pause-overlay hidden">
+    <div class="panel">
+      <h2>PAUSED</h2>
+      <div class="menu-btns">
+        <button id="resumeBtn" class="btn primary">RESUME</button>
+        <button id="quitBtn" class="btn">QUIT TO MENU</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="levelCompleteOverlay" class="pause-overlay hidden">
+    <div class="panel">
+      <h2>LEVEL COMPLETE</h2>
+      <p>Score: <span id="lcScore">0</span></p>
+      <p>Coins Earned: <span id="lcCoins">0</span></p>
+      <div class="menu-btns"><button id="lcContinue" class="btn primary">CONTINUE</button></div>
+    </div>
+  </div>
+
+  <div id="bossWarn" class="boss-warn hidden">WARNING: BOSS APPROACHING</div>
+
+  <div id="gameoverScreen" class="screen hidden">
+    <div class="panel">
+      <h2>GAME OVER</h2>
+      <p>FINAL SCORE: <span id="finalScore">0</span></p>
+      <p>HIGH SCORE: <span id="finalHigh">0</span></p>
+      <p>COINS EARNED: <span id="finalCoins">0</span></p>
+      <div class="menu-btns">
+        <button id="playAgainBtn" class="btn primary">PLAY AGAIN</button>
+        <button id="menuBtn" class="btn">MAIN MENU</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="storage.js"></script>
+<script src="audio.js"></script>
+<script src="effects.js"></script>
+<script src="bullets.js"></script>
+<script src="weapons.js"></script>
+<script src="aircraft.js"></script>
+<script src="levels.js"></script>
+<script src="missions.js"></script>
+<script src="player.js"></script>
+<script src="enemies.js"></script>
+<script src="game.js"></script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; width: 100%; overflow: hidden; background: #0a0f1f; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; color: #fff; }
+#app { position: relative; width: 100vw; height: 100vh; height: 100dvh; }
+#gameCanvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+
+.hidden { display: none !important; }
+
+/* HUD */
+#hud { position: absolute; inset: 0; pointer-events: none; z-index: 5; }
+.hud-top { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; gap: 8px; flex-wrap: wrap; }
+.hud-block { display: flex; flex-direction: column; align-items: center; background: rgba(0,0,0,0.35); padding: 4px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); }
+.hud-label { font-size: 10px; letter-spacing: 1px; opacity: 0.7; }
+.hud-val { font-size: 16px; font-weight: 700; }
+.hud-val.small { font-size: 13px; }
+#pauseBtn { pointer-events: auto; width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.3); background: rgba(0,0,0,0.5); color: #fff; font-size: 16px; cursor: pointer; }
+.hud-bottom { position: absolute; bottom: 10px; left: 10px; right: 10px; display: flex; flex-direction: column; gap: 6px; }
+.health-wrap, .boss-wrap, .weapon-bar { display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.35); padding: 6px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); }
+.health-bar { flex: 1; height: 12px; background: rgba(255,255,255,0.1); border-radius: 6px; overflow: hidden; min-width: 60px; }
+.health-fill { height: 100%; width: 100%; background: linear-gradient(90deg, #ff5a5a, #ffe066, #66ffaa); transition: width 0.15s; }
+.health-fill.boss { background: linear-gradient(90deg, #c084fc, #ff5a5a); }
+.weapon-bar { font-size: 12px; font-weight: 700; }
+
+/* Screens */
+.screen { position: absolute; inset: 0; z-index: 10; display: flex; align-items: center; justify-content: center; background: rgba(5,10,25,0.6); backdrop-filter: blur(2px); overflow: auto; }
+.screen.hidden { display: none; }
+
+.menu-card, .panel { background: linear-gradient(180deg, rgba(20,30,60,0.95), rgba(10,15,35,0.95)); border: 1px solid rgba(120,180,255,0.3); border-radius: 16px; padding: 28px 36px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.5); max-width: 95vw; max-height: 90vh; overflow: auto; }
+.panel.wide { max-width: 95vw; }
+.logo { font-size: 60px; font-weight: 900; letter-spacing: 8px; background: linear-gradient(180deg, #7bd0ff, #1e5fa8); -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: 0 0 30px rgba(123,208,255,0.4); }
+.subtitle { font-size: 20px; letter-spacing: 6px; color: #ffe066; margin-bottom: 14px; }
+.menu-high { margin: 10px 0 18px; font-size: 14px; opacity: 0.85; }
+.menu-btns { display: flex; flex-direction: column; gap: 10px; margin: 14px 0; align-items: center; }
+.menu-toggles { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+.btn { padding: 12px 24px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.08); color: #fff; font-size: 15px; font-weight: 600; cursor: pointer; transition: transform 0.1s, background 0.2s; min-width: 160px; }
+.btn:hover { background: rgba(255,255,255,0.16); }
+.btn:active { transform: scale(0.97); }
+.btn.primary { background: linear-gradient(180deg, #3a8fd4, #1e5fa8); border-color: #7bd0ff; }
+.btn.small { padding: 8px 14px; font-size: 13px; min-width: 0; }
+
+.panel h2 { font-size: 28px; margin-bottom: 14px; color: #7bd0ff; }
+.panel p { margin: 6px 0; font-size: 15px; }
+.setting-row { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1); flex-wrap: wrap; }
+.setting-row input, .setting-row select { min-width: 120px; }
+
+.aircraft-list, .missions-list { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin: 12px 0; }
+.aircraft-card, .mission-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 14px; width: 200px; text-align: center; }
+.aircraft-card.selected { border-color: #7bd0ff; box-shadow: 0 0 12px rgba(123,208,255,0.4); }
+.aircraft-card.locked { opacity: 0.6; }
+.ac-name { font-size: 18px; font-weight: 700; color: #7bd0ff; }
+.ac-desc { font-size: 12px; opacity: 0.8; margin: 4px 0; }
+.ac-stats, .ac-weapon { font-size: 11px; opacity: 0.85; }
+.mission-card.done { border-color: #66ffaa; }
+.m-name { font-size: 14px; font-weight: 600; }
+.m-prog { font-size: 12px; opacity: 0.8; }
+.m-reward { font-size: 12px; color: #ffe066; }
+.claimed { font-size: 12px; color: #66ffaa; }
+
+.hangar-btns { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 10px 0; }
+
+.loading-bar { width: 240px; height: 10px; background: rgba(255,255,255,0.1); border-radius: 5px; overflow: hidden; margin: 16px auto; }
+.loading-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #7bd0ff, #1e5fa8); transition: width 0.1s; }
+
+.boss-warn { position: absolute; top: 20%; left: 50%; transform: translateX(-50%); z-index: 20; font-size: 24px; font-weight: 900; color: #ff3b3b; text-shadow: 0 0 20px #ff3b3b; letter-spacing: 3px; animation: pulse 0.6s infinite; pointer-events: none; }
+.boss-warn.hidden { display: none; }
+@keyframes pulse { 0%,100% { opacity: 1; transform: translateX(-50%) scale(1); } 50% { opacity: 0.6; transform: translateX(-50%) scale(1.08); } }
+
+.pause-overlay { position: absolute; inset: 0; z-index: 15; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.55); }
+.pause-overlay.hidden { display: none; }
+
+@media (max-width: 600px) {
+  .logo { font-size: 44px; }
+  .subtitle { font-size: 16px; }
+  .menu-card, .panel { padding: 20px 16px; }
+  .hud-top { padding: 6px 8px; }
+  .hud-val { font-size: 13px; }
+  .btn { min-width: 140px; padding: 10px 18px; }
+  .aircraft-card { width: 160px; }
+}
